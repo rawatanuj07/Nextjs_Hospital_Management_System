@@ -25,3 +25,57 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+/* SIDEBAR */
+
+.sidebar{
+  width: 20rem;
+  height: 100vh;
+  background-color: rgb(25, 113, 46);
+  padding: 1rem;
+  transition: all 0.3s linear; 
+}
+
+.sidebar_top{
+  width: max-content;
+  display: flex;
+  align-content: center;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid white;
+}
+
+.sidebar_list{
+  list-style: none;
+}
+
+ .sidebar_link{
+  align-content: center;
+  display: inline-block;
+  font-size: 1rem;
+  text-decoration: none;
+  color: white;
+  padding: 0.8rem 5rem;
+  display: flex;
+  margin-bottom: 2rem;
+  background-color: rgb(12, 63, 23) ;
+  border-radius: 0.8rem;
+  
+  
+}
+
+
+.sidebar_icon{
+  display: inline-block;
+  font-size: 1.2rem;
+  margin-right: 5px;
+  margin-top: 5px;
+}
+
+
+.sidebar_name{
+  display: inline-block;
+  font-size: 1rem;
+  margin-right: 25px;
+  padding-top: 3px;
+}
