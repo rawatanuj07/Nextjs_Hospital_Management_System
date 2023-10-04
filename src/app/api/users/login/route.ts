@@ -53,10 +53,10 @@ export async function POST(request: NextRequest) {
     //create token data
     const tokenData = {
       id: usere._id,
-      username: usere.username,
-      email: usere.email,
+      username: usere.user.username,
+      email: usere.user.email,
     };
-    console.log("tokenData created succesfully");
+    console.log("tokenData created succesfully with", tokenData);
 
     //create token
     const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
