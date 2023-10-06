@@ -60,7 +60,7 @@ export default function TestDetailsForm() {
     const [datas, setData] = useState<TestData | null>(null);
 
     const [selectedTestName, setSelectedTestName] = useState("");
-    const [selectedTestPrice, setSelectedTestPrice] = useState<number | undefined>(undefined);
+    const [selectedTestPrice, setSelectedTestPrice] = useState("");
   
     useEffect(() => {
       fetch('/api/ddowns/tests')
@@ -74,7 +74,7 @@ export default function TestDetailsForm() {
 
         setTestNames(testNames);
         setTestNameToPrice(testPrice);
-        setSelectedTestPrices(Array(testNames.length).fill(""));
+        // setSelectedTestPrices(Array(testNames.length).fill(""));
 
 
       })
@@ -92,54 +92,19 @@ export default function TestDetailsForm() {
 
 
   const [formData, setFormData] = useState<FormData[]>([
-    { srNo: 1, testName: "", price: "", quantity: "", amount: 0 },
+    {   srNo: 1, 
+        testName: "",
+        price: "", 
+        quantity: "", 
+        amount: 0 },
   ]);
   const [totalPrice, setTotalPrice] = useState(0);
 
-//   const handleChange = (
-//     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-//     index: number
-//   ) => {
-//     const { name, value } = e.target;
-//     const updatedFormData = [...formData];
-//     updatedFormData[index] = {
-//       ...updatedFormData[index],
-//       [name]: name === "srNo" ? parseInt(value) : value,
-//     };
 
-//     if (name === "testName") {
-//         // Update the selected test price for this row
-//         const selectedTestPrice = testNameToPrice[value] || "";
-//         const updatedSelectedTestPrices = [...selectedTestPrices];
-//         if (!updatedSelectedTestPrices[index]) {
-//           updatedSelectedTestPrices[index] = "";
-//         }
-//         updatedSelectedTestPrices[index] = selectedTestPrice.toString();
-//         setSelectedTestPrices(updatedSelectedTestPrices);
-//       }
-//     setFormData(updatedFormData);
 
-//     if (name === "testName" && !formData[index + 1]?.srNo) {
-//       updatedFormData[index + 1] = {
-//         ...updatedFormData[index + 1],
-//         srNo: formData[index].srNo + 1,
-//       };
-//       setFormData(updatedFormData);
-//     }
-//   };
 
-const handleTestNameChange = (index: number, testName: string) => {
-    console.log("Test name:", testName);
-    console.log("Test name to price mapping:", testNameToPrice);
-    console.log("datasss is ", datas);
-    // Update the selected test price for this row
-    const selectedTestPrice = datas[0][testName] || "";
-    console.log("Selected test price:", selectedTestPrice);
 
-    const updatedSelectedTestPrices = [...selectedTestPrices];
-    updatedSelectedTestPrices[index] = selectedTestPrice.toString();
-    setSelectedTestPrices(updatedSelectedTestPrices);
-  };
+  
 const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     index: number
@@ -149,15 +114,49 @@ const handleChange = (
     updatedFormData[index] = {
       ...updatedFormData[index],
       [name]: name === "srNo" ? parseInt(value) : value,
+    //   price: selectedTestPrice,
     };
     console.log("name is", name);
     console.log("value is", value);
+    console.log("formData is", formData);
 
     if (name === "testName") {
-      handleTestNameChange(index, value); // Call the function to update price
-    }
 
+    const handleTestNameChange = (testName: string) => {
+        console.log("Test name:", testName);
+        console.log("Test name to price mapping:", testNameToPrice);
+        console.log("datasss is ", datas);
+        // Update the selected test price for this row
+    
+        const finalTestPrice = datas![0][testName] || "";
+        setSelectedTestPrice(finalTestPrice);
+        updatedFormData[index].price = finalTestPrice;
+
+
+
+        console.log("Selected test price:", finalTestPrice);
+      };
+            handleTestNameChange(value); // Call the function to update price
+
+    }
+    else if (name === "quantity") {
+        // Calculate the amount based on price and quantity
+        const price = parseFloat(updatedFormData[index].price);
+        const quantity = parseFloat(value);
+        const amount = isNaN(price) || isNaN(quantity) ? 0 : price * quantity;
+        updatedFormData[index].amount = amount;
+
+        console.log("QuanAmt", formData);
+
+      }
     setFormData(updatedFormData);
+
+    console.log("finaLLformData is", formData);
+
+
+   
+    
+
 
     if (name === "testName" && !formData[index + 1]?.srNo) {
       updatedFormData[index + 1] = {
@@ -169,12 +168,14 @@ const handleChange = (
   };
 
 
-  const handleCalculateTotal = () => {
-    const calculatedTotal = formData.reduce((total, item) => {
-      return total + (parseFloat(item.amount.toString()) || 0);
-    }, 0);
-    setTotalPrice(calculatedTotal);
-  };
+ useEffect(() => {
+  // Calculate the total price whenever formData changes
+  const calculatedTotal = formData.reduce((total, item) => {
+    return total + (parseFloat(item.amount) || 0);
+  }, 0);
+  setTotalPrice(calculatedTotal);
+  console.log("totalFormReal is", formData);
+}, [formData]);
 
 
  
@@ -222,7 +223,7 @@ const handleChange = (
           <input
             type="text"
             name="price"
-            value={selectedTestPrice}
+            value={row.price}
             readOnly
           />
           <input
@@ -230,6 +231,7 @@ const handleChange = (
             name="quantity"
             value={row.quantity}
             onChange={(e) => handleChange(e, index)}
+            // readOnly
           />
           <input
             type="text"
@@ -240,7 +242,7 @@ const handleChange = (
           {row.amount && <span>&#10003;</span>}
         </FormGroup>
       ))}
-      <Button onClick={handleCalculateTotal}>Calculate Total</Button>
+      <Button >Calculate Total</Button>
       <h3>Total Price: {totalPrice}</h3>
     </FormContainer>
   );
