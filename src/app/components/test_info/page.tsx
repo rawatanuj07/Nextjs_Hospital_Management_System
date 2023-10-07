@@ -49,7 +49,8 @@ interface FormData {
   amount: number;
 }
 
-export default function TestDetailsForm() {
+
+export default function TestDetailsForm( { onDataReceived } )  {
     type TestData = Record<string, number>;
 
     const [testNames, setTestNames] = useState<string[]>([]);
@@ -63,7 +64,7 @@ export default function TestDetailsForm() {
     const [selectedTestPrice, setSelectedTestPrice] = useState("");
   
     useEffect(() => {
-      fetch('/api/ddowns/tests')
+      fetch('/api/form/ddowns/test_details')
       .then((response) => response.json() as unknown as TestData) // Use type assertion
       .then((data) => {
         const testNames = Object.keys(data[0]);
@@ -99,6 +100,7 @@ export default function TestDetailsForm() {
         amount: 0 },
   ]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [propData, setPropData] = useState({});
 
 
 
@@ -175,12 +177,26 @@ const handleChange = (
   }, 0);
   setTotalPrice(calculatedTotal);
   console.log("totalFormReal is", formData);
+  console.log("totalFormReal is", totalPrice);
+  const newArray = formData.map((obj) => ({
+    ...obj, // Copy the existing object properties
+    "total price": totalPrice, // Add the new property with the specified number
+  }));
+  console.log("newArray is", newArray);
+  setPropData(newArray);
 }, [formData]);
 
+  console.log("newArray is", propData);
 
- 
+  // useEffect(() => {
+   
+  //   // Pass the data to the parent component using the callback function
+  //   onDataReceived(propData || {});
+  // }, [propData]);
+      onDataReceived(propData || {});
 
-  return (
+
+  return (<>
     <FormContainer>
       <h1>Test Details</h1>
       <FormGroup>
@@ -245,5 +261,6 @@ const handleChange = (
       <Button >Calculate Total</Button>
       <h3>Total Price: {totalPrice}</h3>
     </FormContainer>
+    </>
   );
 }

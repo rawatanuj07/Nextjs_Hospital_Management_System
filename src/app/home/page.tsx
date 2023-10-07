@@ -1,6 +1,5 @@
 import BaseLayout from "../components/baseLayout/page";
 import Sidebar from "../components/sidebar/page";
-
 import PatientInfo from "../components/patientInfo/page"; // import the component with proper casing
 import TestDetailsForm from "../components/test_info/page";
 
@@ -12,13 +11,15 @@ export default function HomePage() {
                  <div>
                     <Sidebar/>
                  </div>
+            
 
                 <div>
                     <PatientInfo/>      
                 </div>
-                <div>
+                {/* <div>
                     <TestDetailsForm/>
-                </div>
+                </div> */}
+           
             </div>
         </BaseLayout>
     )

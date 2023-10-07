@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import TestDetailsForm  from "../test_info/page";
 const FormContainer = styled.div`
   background-color: indigo;
   color: white;
@@ -68,6 +68,7 @@ export default function PatientForm() {
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    console.log("patient form data is:",formData);
   };
   const handleChangew = (date: Date | null) => {
     setStartDate(date);
@@ -82,7 +83,7 @@ export default function PatientForm() {
   const [doctors, setDoctors] = useState([]);
 
   useEffect(() => {
-    fetch("/api/ddowns/docsddown")
+    fetch("/api/form/ddowns/docsddown")
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -97,8 +98,18 @@ export default function PatientForm() {
         console.log("Fetching doctors data failed:", error);
       });
   }, []);
+  const [propsData, setPropsData] = useState([]);
+
+  const receiveDataFromChild = (data) => {
+    // Do something with the data received from the child
+    console.log("Data received from child:", data);
+    setPropsData(data);
+  };
 
   return (
+    <div>
+          <TestDetailsForm onDataReceived={receiveDataFromChild}  />
+
     <FormContainer>
       <h1>Patient Details</h1>
       <FormGroup>
@@ -204,5 +215,7 @@ export default function PatientForm() {
       </FormGroup>
       <Button>Submit</Button>
     </FormContainer>
+ 
+   </div>
   );
 }
