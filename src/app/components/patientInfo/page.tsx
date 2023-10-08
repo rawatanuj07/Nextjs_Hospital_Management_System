@@ -5,6 +5,7 @@ import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TestDetailsForm  from "../test_info/page";
+
 const FormContainer = styled.div`
   background-color: indigo;
   color: white;
@@ -83,7 +84,7 @@ const [submitData, setSubmitData] = useState({})
      
     console.log("formDZata is:", combinedData);
     console.log("type of submitData is", typeof(combinedData));
-    fetch("/api/postapi", {
+    fetch("/api/post", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -101,29 +102,36 @@ const [submitData, setSubmitData] = useState({})
   }
 
 
-
-// const onSignup = async() => {
-//         try {
-//             const response =  await fetch("api/users/signup", {
-//                 method: "POST",
-//                 headers: { "Content-Type": "application/json" },
-//                 body: JSON.stringify({ user })
-                
-//             });
-//             console.log("SignUp success", response.body);
-//             // return router.push("/login");
-//         } catch (error: any) {
-//             console.log("SignUp failed", error.message);
-//         }
-//     }
-
-
-
-
-
   const [doctors, setDoctors] = useState([]);
 
   useEffect(() => {
+
+   
+
+
+    fetch("/api/form/invoiceapi", {
+      method: "POST",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Update the invoice number in your formData
+        const newInvoiceNum = String(parseInt(data.highestInvoiceNum) + 1);
+        setFormData({ ...formData, invoiceNum: newInvoiceNum });
+      })
+      .catch((error) => {
+        console.log("Fetching highest invoice number failed:", error);
+      });
+
+
+      console.log("respnseIZact", formData);
+
+
+
     fetch("/api/form/ddowns/docsddown")
       .then((response) => {
         if (!response.ok) {
@@ -140,25 +148,6 @@ const [submitData, setSubmitData] = useState({})
       });
   }, []);
   const [propsData, setPropsData] = useState([]);
-
-  // const receiveDataFromChild = (data: any) => {
-  //   // Do something with the data received from the child
-  //   console.log("Data received from child:", data);
-  //   console.log(typeof(data));
-  //   console.log("patient form data is:",formData);
-
-  //   setPropsData(data);
-  //   console.log("props data is:",propsData);
-  //   console.log("type of propsdata", typeof(propsData));
-  //   console.log("type of formdata", typeof(formData));
-  //   const combinedObject = { ...propsData, ...formData };
-  //   console.log("combined data is:", (combinedObject));
-    
-  //   console.log("combined data is:", typeof(combinedObject));
-  //   // setSubmitData({combinedObject});
-
-
-  // };
 
 
 
@@ -180,7 +169,6 @@ const [combinedData, setCombinedData] = useState({});
     setCombinedData(combinedObject);
   }, [propsData, formData]);
   
-  // Whenever you need to update submitData, do it outside the useEffect
  
   
   return (
