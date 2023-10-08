@@ -177,11 +177,12 @@ const handleChange = (
   }, 0);
   setTotalPrice(calculatedTotal);
   console.log("totalFormReal is", formData);
-  console.log("totalFormReal is", totalPrice);
+  console.log("totalpriceiZ is", calculatedTotal);
   const newArray = formData.map((obj) => ({
     ...obj, // Copy the existing object properties
-    "total price": totalPrice, // Add the new property with the specified number
+    "total price": calculatedTotal, // Add the new property with the specified number
   }));
+  console.log("total price is", formData)
   console.log("newArray is", newArray);
   setPropData(newArray);
 }, [formData]);
@@ -193,7 +194,7 @@ const handleChange = (
   //   // Pass the data to the parent component using the callback function
   //   onDataReceived(propData || {});
   // }, [propData]);
-      onDataReceived(propData || {});
+      onDataReceived(propData);
 
 
   return (<>

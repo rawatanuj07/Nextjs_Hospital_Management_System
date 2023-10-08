@@ -68,7 +68,6 @@ export default function PatientForm() {
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    console.log("patient form data is:",formData);
   };
   const handleChangew = (date: Date | null) => {
     setStartDate(date);
@@ -79,6 +78,48 @@ export default function PatientForm() {
     name: string;
     // Add other properties as needed
   };
+const [submitData, setSubmitData] = useState({})
+  const submitApi = async() => {
+     
+    console.log("formDZata is:", combinedData);
+    console.log("type of submitData is", typeof(combinedData));
+    fetch("/api/postapi", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(combinedData),
+    })
+      .then((response) => response.json())
+      .then((combinedData) => {
+        console.log("Success:", combinedData);
+        alert("Patient Details Added Successfully");
+      })
+      .catch((error) => {
+        console.error("ErroriZ:", error);
+      });
+  }
+
+
+
+// const onSignup = async() => {
+//         try {
+//             const response =  await fetch("api/users/signup", {
+//                 method: "POST",
+//                 headers: { "Content-Type": "application/json" },
+//                 body: JSON.stringify({ user })
+                
+//             });
+//             console.log("SignUp success", response.body);
+//             // return router.push("/login");
+//         } catch (error: any) {
+//             console.log("SignUp failed", error.message);
+//         }
+//     }
+
+
+
+
 
   const [doctors, setDoctors] = useState([]);
 
@@ -100,12 +141,48 @@ export default function PatientForm() {
   }, []);
   const [propsData, setPropsData] = useState([]);
 
-  const receiveDataFromChild = (data) => {
+  // const receiveDataFromChild = (data: any) => {
+  //   // Do something with the data received from the child
+  //   console.log("Data received from child:", data);
+  //   console.log(typeof(data));
+  //   console.log("patient form data is:",formData);
+
+  //   setPropsData(data);
+  //   console.log("props data is:",propsData);
+  //   console.log("type of propsdata", typeof(propsData));
+  //   console.log("type of formdata", typeof(formData));
+  //   const combinedObject = { ...propsData, ...formData };
+  //   console.log("combined data is:", (combinedObject));
+    
+  //   console.log("combined data is:", typeof(combinedObject));
+  //   // setSubmitData({combinedObject});
+
+
+  // };
+
+
+
+
+const [combinedData, setCombinedData] = useState({});
+
+  const receiveDataFromChild = (data: any) => {
     // Do something with the data received from the child
     console.log("Data received from child:", data);
+    console.log("patient form data is:", formData);
+  
     setPropsData(data);
   };
-
+  
+  // Update combinedData whenever either propsData or formData changes
+  useEffect(() => {
+    const combinedObject = { ...propsData, ...formData };
+    console.log("Combined data is:", combinedObject);
+    setCombinedData(combinedObject);
+  }, [propsData, formData]);
+  
+  // Whenever you need to update submitData, do it outside the useEffect
+ 
+  
   return (
     <div>
           <TestDetailsForm onDataReceived={receiveDataFromChild}  />
@@ -213,7 +290,7 @@ export default function PatientForm() {
         />
         {formData.contact && <span>&#10003;</span>}
       </FormGroup>
-      <Button>Submit</Button>
+      <Button onClick={submitApi}>Submit</Button>
     </FormContainer>
  
    </div>
