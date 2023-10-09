@@ -1,5 +1,4 @@
 import { MongoClient } from "mongodb";
-import { NodeNextResponse } from "next/dist/server/base-http/node";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(res: NextResponse) {
@@ -16,15 +15,17 @@ export async function POST(res: NextResponse) {
       .toArray();
 
     if (highestInvoice.length > 0) {
-      console.log("highestInvoiceNumis:", highestInvoice[0].invoiceNum);
-      console.log("TypeOfhighestInvoiceNumis:", typeof highestInvoice[0]);
+      const nm = highestInvoice[0].invoiceNum;
+      console.log("highestInvoiceNumis:", nm);
+      console.log("TypeOfhighestInvoiceNumis:", typeof nm);
       return NextResponse.json(
-        { highestInvoiceNum: highestInvoice[0].invoiceNum++ }
+        { highestInvoiceNum: nm }
         // { status: 200 }
       );
     } else {
       NextResponse.json({ error: "No invoices found" }, { status: 404 });
     }
+    console.log("response is:", res);
   } catch (error) {
     console.error(error);
     NextResponse.json(

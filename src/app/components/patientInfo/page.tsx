@@ -79,7 +79,7 @@ export default function PatientForm() {
     name: string;
     // Add other properties as needed
   };
-const [submitData, setSubmitData] = useState({})
+// const [submitData, setSubmitData] = useState({})
   const submitApi = async() => {
      
     console.log("formDZata is:", combinedData);
@@ -120,8 +120,14 @@ const [submitData, setSubmitData] = useState({})
       })
       .then((data) => {
         // Update the invoice number in your formData
+        console.log("Highest_Iinvoice number1:", typeof(data));
+        console.log("Highest_Iinvoice number2:", {data});
+        console.log("Highest_Iinvoice number3:", {data});
+
         const newInvoiceNum = String(parseInt(data.highestInvoiceNum) + 1);
         setFormData({ ...formData, invoiceNum: newInvoiceNum });
+        console.log("Highest invoice number:", newInvoiceNum);
+
       })
       .catch((error) => {
         console.log("Fetching highest invoice number failed:", error);
@@ -149,19 +155,50 @@ const [submitData, setSubmitData] = useState({})
   }, []);
   const [propsData, setPropsData] = useState([]);
 
+// Call Search_INVOICE API
+const searchInvoice = async() => {
+   // Fetch combined data based on the invoice number
+   const pot = await formData.invoiceNum;
+   console.log("NOwSentInvoice is:", typeof(formData.invoiceNum));
+   console.log("Thef9SentInvoice is:", pot);
+
+   fetch(`/api/form/searchInvoice`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(pot),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((combinedData) => {
+      console.log('Combined Data:', combinedData);
 
 
+      // console.log("9patientFormData is:", patientFormData);
 
-const [combinedData, setCombinedData] = useState({});
+      // Use patientFormData and testDetailsData in your component
+    })
+    .catch((error) => {
+      console.log('Fetching combined data failed:', error);
+    });
+
+}
+
 
   const receiveDataFromChild = (data: any) => {
     // Do something with the data received from the child
     console.log("Data received from child:", data);
-    console.log("patient form data is:", formData);
+    console.log("patient in recform data is:", formData);
   
     setPropsData(data);
   };
-  
+  const [combinedData, setCombinedData] = useState({});
+
   // Update combinedData whenever either propsData or formData changes
   useEffect(() => {
     const combinedObject = { ...propsData, ...formData };
@@ -196,6 +233,8 @@ const [combinedData, setCombinedData] = useState({});
       
       <FormGroup>
         <label>Invoice Number:</label>
+        <Button onClick={searchInvoice}>🔍</Button>
+
         <input
           type="text"
           name="invoiceNum"

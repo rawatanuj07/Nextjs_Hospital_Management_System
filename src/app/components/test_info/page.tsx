@@ -50,7 +50,7 @@ interface FormData {
 }
 
 
-export default function TestDetailsForm( { onDataReceived } )  {
+export default function TestDetailsForm( { onDataReceived } : any)  {
     type TestData = Record<string, number>;
 
     const [testNames, setTestNames] = useState<string[]>([]);
@@ -130,7 +130,7 @@ const handleChange = (
         console.log("datasss is ", datas);
         // Update the selected test price for this row
     
-        const finalTestPrice = datas![0][testName] || "";
+        const finalTestPrice = datas![0][testName]|| "";
         setSelectedTestPrice(finalTestPrice);
         updatedFormData[index].price = finalTestPrice;
 
