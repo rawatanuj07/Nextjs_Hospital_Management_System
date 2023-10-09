@@ -28,7 +28,7 @@ export async function POST(request: any, response: NextResponse) {
     // let testDetailsData = await collection.find({ invoiceNums }).toArray();
 
     // Combine the data into a single object
-
+    console.log("response is:", netFormData);
     return NextResponse.json({ netFormData });
   } catch (error) {
     console.error("Error fetching data:", error);

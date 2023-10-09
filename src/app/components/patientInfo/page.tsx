@@ -175,17 +175,28 @@ const searchInvoice = async() => {
       }
       return response.json();
     })
-    .then((combinedData) => {
-      console.log('Combined Data:', combinedData);
+    .then((searchInv) => {
+      console.log('Combined Data:', searchInv);
+      setStartDate(new Date(searchInv.netFormData.date));
+      setFormData({
+        date: searchInv.netFormData.date || "",
+        invoiceNum: searchInv.netFormData.invoiceNum || "",
+        refBy: searchInv.netFormData.refBy || "",
+        patientName: searchInv.netFormData.patientName || "",
+        gender: searchInv.netFormData.gender || "",
+        address: searchInv.netFormData.address || "",
+        area: searchInv.netFormData.area || "",
+        district: searchInv.netFormData.district || "",
+        contact: searchInv.netFormData.contact || ""
+      })
 
-
-      // console.log("9patientFormData is:", patientFormData);
-
-      // Use patientFormData and testDetailsData in your component
+    
     })
     .catch((error) => {
       console.log('Fetching combined data failed:', error);
     });
+
+
 
 }
 
@@ -233,7 +244,6 @@ const searchInvoice = async() => {
       
       <FormGroup>
         <label>Invoice Number:</label>
-        <Button onClick={searchInvoice}>🔍</Button>
 
         <input
           type="text"
@@ -318,6 +328,8 @@ const searchInvoice = async() => {
         {formData.contact && <span>&#10003;</span>}
       </FormGroup>
       <Button onClick={submitApi}>Submit</Button>
+              <Button onClick={searchInvoice}>🔍</Button>
+
     </FormContainer>
  
    </div>
