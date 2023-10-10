@@ -134,7 +134,7 @@ export default function PatientForm() {
       });
 
 
-      console.log("respnseIZact", formData);
+      // console.log("respnseIZact", formData);
 
 
 
@@ -152,12 +152,16 @@ export default function PatientForm() {
       .catch((error) => {
         console.log("Fetching doctors data failed:", error);
       });
-  }, []);
-  const [propsData, setPropsData] = useState([]);
+  },[]);
+  const [propsData, setPropsData] = useState({});
+  const [testDetailsData, setTestDetailsData] = useState({});
+  const [fetchData, setFetchData] = useState(false);
 
 // Call Search_INVOICE API
 const searchInvoice = async() => {
    // Fetch combined data based on the invoice number
+   setFetchData(true);
+
    const pot = await formData.invoiceNum;
    console.log("NOwSentInvoice is:", typeof(formData.invoiceNum));
    console.log("Thef9SentInvoice is:", pot);
@@ -176,7 +180,6 @@ const searchInvoice = async() => {
       return response.json();
     })
     .then((searchInv) => {
-      console.log('Combined Data:', searchInv);
       setStartDate(new Date(searchInv.netFormData.date));
       setFormData({
         date: searchInv.netFormData.date || "",
@@ -189,8 +192,33 @@ const searchInvoice = async() => {
         district: searchInv.netFormData.district || "",
         contact: searchInv.netFormData.contact || ""
       })
+// console.log("searchInv is:", searchInv.netFormData);
+        resetFetchData();
 
-    
+      const obj = Object.values(searchInv.netFormData).filter(
+        (value) => typeof value === 'object' && value !== null
+      );
+
+      const cO = obj.reduce((result: Record< any, any>, obj, index) => {
+        result[index] = obj;
+        return result;
+      }, {});
+
+      // setTestDetailsData(cO);
+      console.log("detilstest", testDetailsData);
+      setTimeout(() => {
+
+        setTestDetailsData(cO);
+
+      },1000);
+      
+      // for (const obx of obj){
+  //       console.log("obx is:", cO);
+  //       console.log("BEFOREobx is:", propsData);
+  // // setPropsData([]);
+  // // setPropsData(cO);
+  // console.log("2obx is:", propsData);
+
     })
     .catch((error) => {
       console.log('Fetching combined data failed:', error);
@@ -199,7 +227,11 @@ const searchInvoice = async() => {
 
 
 }
-
+useEffect(() => {
+  console.log("settignPropsdata", testDetailsData); 
+  setPropsData({testDetailsData});
+  // console.log("Updated propsData:", propsData);
+}, [testDetailsData]);
 
   const receiveDataFromChild = (data: any) => {
     // Do something with the data received from the child
@@ -215,13 +247,17 @@ const searchInvoice = async() => {
     const combinedObject = { ...propsData, ...formData };
     console.log("Combined data is:", combinedObject);
     setCombinedData(combinedObject);
+    
   }, [propsData, formData]);
   
- 
+  const resetFetchData = () => {
+    setFetchData(false);
+  };
+
   
   return (
     <div>
-          <TestDetailsForm onDataReceived={receiveDataFromChild}  />
+          <TestDetailsForm onDataReceived={receiveDataFromChild} testDetailsData={testDetailsData}  fetchData={fetchData} resetFetchData={resetFetchData}  />
 
     <FormContainer>
       <h1>Patient Details</h1>

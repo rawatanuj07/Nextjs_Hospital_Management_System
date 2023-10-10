@@ -50,7 +50,7 @@ interface FormData {
 }
 
 
-export default function TestDetailsForm( { onDataReceived } : any)  {
+export default function TestDetailsForm( { onDataReceived, testDetailsData, fetchData, resetFetchData }: any )  {
     type TestData = Record<string, number>;
 
     const [testNames, setTestNames] = useState<string[]>([]);
@@ -94,10 +94,10 @@ export default function TestDetailsForm( { onDataReceived } : any)  {
 
   const [formData, setFormData] = useState<FormData[]>([
     {   srNo: 1, 
-        testName: "",
-        price: "", 
-        quantity: "", 
-        amount: 0 },
+      testName: "",
+      price: "", 
+      quantity: "", 
+      amount: 0 },
   ]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [propData, setPropData] = useState({});
@@ -189,13 +189,59 @@ const handleChange = (
 
   console.log("newArray is", propData);
 
+
+
+
+  useEffect(() => {
+    // Log the received testDetailsData
+    
+    // if (testDetailsData) {
+    //   const convertedData = testDetailsData.map((item, index) => ({
+    //     srNo: index + 1,
+    //     testName: item.testName || "",
+    //     price: item.price || "",
+    //     quantity: item.quantity || "",
+    //     amount: item.amount || 0,
+    //   }));
+    if (testDetailsData) {
+      const convertedData = Object.keys(testDetailsData).map((key, index) => ({
+        srNo: index + 1,
+        testName: testDetailsData[key].testName || "",
+        price: testDetailsData[key].price || "",
+        quantity: testDetailsData[key].quantity || "",
+        amount: testDetailsData[key].amount || 0,
+    }));
+      setFormData(convertedData);
+
+    }
+
+
+    console.log('Received testDetailsData:', testDetailsData);
+    // setFormData(convertedData);
+  // fetchData(false);
+  }, [testDetailsData, fetchData]);
   // useEffect(() => {
-   
+
   //   // Pass the data to the parent component using the callback function
   //   onDataReceived(propData || {});
   // }, [propData]);
-      onDataReceived(propData);
+  // resetFetchData();
 
+      onDataReceived(propData);
+      // testDetailsData(propData);
+      useEffect(() => {
+        if (formData.length === 0) {
+          setFormData([
+            {
+              srNo: 1,
+              testName: "",
+              price: "",
+              quantity: "",
+              amount: 0,
+            },
+          ]);
+        }
+      }, [formData]);
 
   return (<>
     <FormContainer>
@@ -208,7 +254,8 @@ const handleChange = (
         <label>Amount:</label>
       </FormGroup>
 
-      {formData.map((row, index) => (
+      
+    {(formData).map((row, index) => (
         <FormGroup key={index}>
           <input
             type="text"
