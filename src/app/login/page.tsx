@@ -24,8 +24,9 @@ export default function LoginPage() {
                 
             });
             console.log("login successful", response.body);
-            // router.push("/home"); 
-        } catch (error: any) {
+            if (response.ok) {
+                router.push("/home");
+              }        } catch (error: any) {
             console.log("error is", error.message);
         }
     }

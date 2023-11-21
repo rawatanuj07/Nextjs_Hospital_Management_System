@@ -129,13 +129,9 @@ const handleChange = (
         console.log("Test name to price mapping:", testNameToPrice);
         console.log("datasss is ", datas);
         // Update the selected test price for this row
-    
-        const finalTestPrice = datas![0][testName]|| "";
+            const finalTestPrice = datas![0][testName]|| "";
         setSelectedTestPrice(finalTestPrice);
         updatedFormData[index].price = finalTestPrice;
-
-
-
         console.log("Selected test price:", finalTestPrice);
       };
             handleTestNameChange(value); // Call the function to update price
@@ -152,12 +148,7 @@ const handleChange = (
 
       }
     setFormData(updatedFormData);
-
     console.log("finaLLformData is", formData);
-
-
-   
-    
 
 
     if (name === "testName" && !formData[index + 1]?.srNo) {

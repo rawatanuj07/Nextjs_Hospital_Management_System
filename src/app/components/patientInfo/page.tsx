@@ -210,7 +210,7 @@ const searchInvoice = async() => {
 
         setTestDetailsData(cO);
 
-      },1000);
+      },100);
       
       // for (const obx of obj){
   //       console.log("obx is:", cO);
